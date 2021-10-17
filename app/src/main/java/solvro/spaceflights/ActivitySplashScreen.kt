@@ -14,8 +14,6 @@ class ActivitySplashScreen: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        findViewById<ImageView>(R.id.image_logo).isForceDarkAllowed = false
-
         Handler(Looper.getMainLooper()).postDelayed({
             startActivity(Intent(this, MainActivity::class.java))
             finish()

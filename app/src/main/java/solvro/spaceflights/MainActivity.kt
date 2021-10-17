@@ -9,6 +9,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 
 import androidx.appcompat.widget.Toolbar
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import solvro.spaceflights.adapters.PagerAdapter
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +24,17 @@ class MainActivity : AppCompatActivity() {
 
         val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.info_foreground)
         findViewById<Toolbar>(R.id.toolbar).overflowIcon = drawable
+
+        val list = arrayListOf("all", "favourite")
+
+        val pager = findViewById<ViewPager2>(R.id.pager)
+        pager.adapter = PagerAdapter(supportFragmentManager, lifecycle, list)
+        val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
+
+        TabLayoutMediator(tabLayout, pager) {tab, position ->
+            tab.text = list[position]
+        }.attach()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
