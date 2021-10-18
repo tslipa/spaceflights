@@ -11,6 +11,7 @@ import solvro.spaceflights.api.RetrofitClientInstance.retrofitInstance
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import retrofit2.Callback
 import retrofit2.Response
 import solvro.spaceflights.adapters.RecyclerAdapter
@@ -18,8 +19,8 @@ import solvro.spaceflights.api.Article
 import solvro.spaceflights.api.RetrofitDataGetter
 
 
-class FragmentAll: Fragment() {
-    private var list : List<Article>? = null
+class FragmentAll : Fragment() {
+    private var list: List<Article>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,12 +35,30 @@ class FragmentAll: Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        getArticles()
+
+        val swipeRefresh = requireActivity().findViewById<SwipeRefreshLayout>(R.id.swiperefresh)
+        swipeRefresh.setOnRefreshListener {
+            getArticles()
+            swipeRefresh.isRefreshing = false
+        }
+    }
+
+    fun startActivityArticle(tag: Int) {
+        if (list != null) {
+            val intent = Intent(activity, ActivityArticle::class.java)
+            intent.putExtra("id", tag)
+            startActivity(intent)
+        }
+    }
+
+    private fun getArticles() {
         val service = retrofitInstance!!.create(
             RetrofitDataGetter::class.java
         )
 
         val call: Call<List<Article>?>? = service.articles
-        call!!.enqueue(object: Callback<List<Article>?> {
+        call!!.enqueue(object : Callback<List<Article>?> {
             override fun onResponse(
                 call: Call<List<Article>?>,
                 response: Response<List<Article>?>
@@ -58,13 +77,5 @@ class FragmentAll: Fragment() {
                 ).show()
             }
         })
-    }
-
-    fun startActivityArticle(tag: Int) {
-        if (list != null) {
-            val intent = Intent(activity, ActivityArticle::class.java)
-            intent.putExtra("id", list!![tag].id)
-            startActivity(intent)
-        }
     }
 }
