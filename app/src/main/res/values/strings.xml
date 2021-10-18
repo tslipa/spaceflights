@@ -5,6 +5,10 @@
     <string name="app_info_message">© 2021 Paweł Cegieła\n\n
         * Faculty of Information and Communication Technology\n
         * Wrocław University of Science and Technology\n\n
-        * Icon of the app (the rocket) made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></string>
+        * Icon of the app (the rocket) made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>\n\n
+        * Font in logo is AstroSpace from FontSpace</string>
     <string name="ok">OK</string>
+    <string name="all">all</string>
+    <string name="favourite">favourite</string>
+    <string name="placeholder">Placeholder</string>
 </resources>

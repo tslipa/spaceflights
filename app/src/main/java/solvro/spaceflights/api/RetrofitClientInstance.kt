@@ -1,4 +1,4 @@
-package solvro.spaceflights.retrofit
+package solvro.spaceflights.api
 
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Retrofit

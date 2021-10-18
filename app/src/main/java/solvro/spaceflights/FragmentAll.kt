@@ -1,23 +1,26 @@
 package solvro.spaceflights
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import retrofit2.Call
-import solvro.spaceflights.retrofit.RetrofitClientInstance.retrofitInstance
+import solvro.spaceflights.api.RetrofitClientInstance.retrofitInstance
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Callback
 import retrofit2.Response
 import solvro.spaceflights.adapters.RecyclerAdapter
-import solvro.spaceflights.retrofit.GSONArticle
-import solvro.spaceflights.retrofit.GetDataService
+import solvro.spaceflights.api.Article
+import solvro.spaceflights.api.RetrofitDataGetter
 
 
 class FragmentAll: Fragment() {
+    private var list : List<Article>? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,21 +35,22 @@ class FragmentAll: Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val service = retrofitInstance!!.create(
-            GetDataService::class.java
+            RetrofitDataGetter::class.java
         )
 
-        val call: Call<List<GSONArticle>?>? = service.articles
-        call!!.enqueue(object: Callback<List<GSONArticle>?> {
+        val call: Call<List<Article>?>? = service.articles
+        call!!.enqueue(object: Callback<List<Article>?> {
             override fun onResponse(
-                call: Call<List<GSONArticle>?>,
-                response: Response<List<GSONArticle>?>
+                call: Call<List<Article>?>,
+                response: Response<List<Article>?>
             ) {
+                list = response.body()
                 val recyclerView = view!!.findViewById<RecyclerView>(R.id.recycler_view)
                 recyclerView.layoutManager = LinearLayoutManager(activity)
-                recyclerView.adapter = RecyclerAdapter(response.body(), activity!!)
+                recyclerView.adapter = RecyclerAdapter(list, activity!!, this@FragmentAll)
             }
 
-            override fun onFailure(call: Call<List<GSONArticle>?>, t: Throwable) {
+            override fun onFailure(call: Call<List<Article>?>, t: Throwable) {
                 Toast.makeText(
                     activity,
                     t.toString(),
@@ -54,5 +58,13 @@ class FragmentAll: Fragment() {
                 ).show()
             }
         })
+    }
+
+    fun startActivityArticle(tag: Int) {
+        if (list != null) {
+            val intent = Intent(activity, ActivityArticle::class.java)
+            intent.putExtra("id", list!![tag].id)
+            startActivity(intent)
+        }
     }
 }

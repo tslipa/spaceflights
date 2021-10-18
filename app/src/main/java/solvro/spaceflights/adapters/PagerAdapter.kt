@@ -7,7 +7,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import solvro.spaceflights.FragmentAll
 import solvro.spaceflights.FragmentFavourite
 
-class PagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle, private val data: ArrayList<String>) : FragmentStateAdapter(fragmentManager, lifecycle) {
+class PagerAdapter(
+    fragmentManager: FragmentManager,
+    lifecycle: Lifecycle,
+    private val data: ArrayList<String>
+) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
     override fun getItemCount(): Int {
         return data.size

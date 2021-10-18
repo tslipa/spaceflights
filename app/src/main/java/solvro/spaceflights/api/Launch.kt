@@ -1,6 +1,6 @@
-package solvro.spaceflights.retrofit
+package solvro.spaceflights.api
 
-class GSONLaunches {
+class Launch {
     val id: String? = null
     val provider: String? = null
 }

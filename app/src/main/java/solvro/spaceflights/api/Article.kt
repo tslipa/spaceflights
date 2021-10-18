@@ -1,6 +1,6 @@
-package solvro.spaceflights.retrofit
+package solvro.spaceflights.api
 
-class GSONArticle {
+class Article() {
     val id = 0
     val title: String? = null
     val url: String? = null
@@ -10,6 +10,6 @@ class GSONArticle {
     val publishedAt: String? = null
     val updatedAt: String? = null
     val featured: String? = null
-    val launches: List<GSONLaunches>? = null
-    val events: List<GSONEvents>? = null
+    val launches: List<Launch>? = null
+    val events: List<Event>? = null
 }
