@@ -40,10 +40,17 @@ class RecyclerAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val article = dataSet!![position]
         holder.itemView.tag = position
-        holder.textDate.text = article.publishedAt
+        holder.textDate.text = mContext.getString(
+            R.string.date_format,
+            article.updatedAt?.subSequence(0, 10),
+            article.updatedAt?.subSequence(11, 19)
+        )
         holder.textTitle.text = article.title
-        holder.textSummary.text =
-            StringBuilder().append(article.summary!!.substring(0, 75)).append("...").toString()
+        holder.textSummary.text = if (article.summary!!.length <= 75) {
+            article.summary
+        } else {
+            StringBuilder().append(article.summary.substring(0, 75)).append("...").toString()
+        }
     }
 
     override fun getItemCount(): Int {

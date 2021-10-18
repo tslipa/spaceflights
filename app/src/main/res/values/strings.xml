@@ -11,4 +11,8 @@
     <string name="all">all</string>
     <string name="favourite">favourite</string>
     <string name="placeholder">Placeholder</string>
+    <string name="date_format">%1$s, %2$s</string>
+    <string name="published">Published: %1$s, %2$s</string>
+    <string name="updated">Updated: %1$s, %2$s</string>
+    <string name="illustration_image">Illustration image</string>
 </resources>

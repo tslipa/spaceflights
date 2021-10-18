@@ -6,39 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="solvro.spaceflights.ToolbarFragment"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/blue_dark_2"
-        app:layout_constraintBottom_toTopOf="@id/guideline_main_top"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/toolbar"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="30dp"
-            android:layout_weight="4"
-            android:fontFamily="@font/astrospace"
-            android:gravity="center_vertical|start"
-            android:text="@string/app_name"
-            android:textSize="23sp" />
-
-        <ImageButton
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/blue_dark_2"
-            android:outlineSpotShadowColor="@color/white"
-            android:src="@drawable/info_icon"
-            tools:layout_editor_absoluteX="326dp"
-            tools:layout_editor_absoluteY="8dp"
-            android:onClick="showDialogInfo"/>
-
-    </LinearLayout>
+        app:layout_constraintBottom_toTopOf="@+id/guideline_main_top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_main_top"
