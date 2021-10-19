@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface RetrofitDataGetter {
-    @get:GET("articles")
+    @get:GET("articles?_limit=30")
     val articles: Call<List<Article>?>?
 
     @GET("articles/{id}")

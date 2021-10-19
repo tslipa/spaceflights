@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -41,7 +42,7 @@ class AllArticlesFragment : AbstractArticlesFragment() {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().findViewById<ShimmerFrameLayout>(R.id.mShimmerViewContainer)!!
+        requireActivity().findViewById<ShimmerFrameLayout>(R.id.shimmer_all)!!
             .startShimmerAnimation()
     }
 
@@ -88,9 +89,9 @@ class AllArticlesFragment : AbstractArticlesFragment() {
     }
 
     override fun stopShimmer() {
-        requireActivity().findViewById<ShimmerFrameLayout>(R.id.mShimmerViewContainer)!!
+        requireActivity().findViewById<ShimmerFrameLayout>(R.id.shimmer_all)!!
             .stopShimmerAnimation()
-        requireActivity().findViewById<ShimmerFrameLayout>(R.id.mShimmerViewContainer)!!.visibility =
+        requireActivity().findViewById<ShimmerFrameLayout>(R.id.shimmer_all)!!.visibility =
             View.GONE
 
         //TODO żeby nie powtarzać

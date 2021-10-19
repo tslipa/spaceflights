@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.facebook.shimmer.ShimmerFrameLayout
 import solvro.spaceflights.R
 import solvro.spaceflights.api.Article
 
@@ -32,6 +33,12 @@ class FavouriteArticlesFragment : AbstractArticlesFragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().findViewById<ShimmerFrameLayout>(R.id.shimmer_favourite)!!
+            .startShimmerAnimation()
+    }
+
     override fun formatList(list: List<Article>?): List<Article> {
         val favourites = ArrayList<Article>()
 
@@ -47,6 +54,11 @@ class FavouriteArticlesFragment : AbstractArticlesFragment() {
     }
 
     override fun stopShimmer() {
+        requireActivity().findViewById<ShimmerFrameLayout>(R.id.shimmer_favourite)!!
+            .stopShimmerAnimation()
+        requireActivity().findViewById<ShimmerFrameLayout>(R.id.shimmer_favourite)!!.visibility =
+            View.GONE
 
+        //TODO żeby nie powtarzać
     }
 }
