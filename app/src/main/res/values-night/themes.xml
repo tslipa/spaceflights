@@ -6,9 +6,9 @@
         <item name="colorPrimaryVariant">@color/blue_dark_3</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondary">@color/gray_light</item>
+        <item name="colorSecondaryVariant">@color/blue_dark_2</item>
+        <item name="colorOnSecondary">@color/blue_dark_1</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">@color/blue_dark_1</item>
         <!-- Customize your theme here. -->

@@ -12,6 +12,7 @@ import solvro.spaceflights.api.RetrofitClientInstance
 import solvro.spaceflights.api.RetrofitDataGetter
 
 import android.graphics.drawable.Drawable
+import android.text.method.LinkMovementMethod
 
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -25,7 +26,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 
 
-class ActivityArticle : AppCompatActivity() {
+class ArticleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_article)
@@ -45,7 +46,7 @@ class ActivityArticle : AppCompatActivity() {
 
             override fun onFailure(call: Call<Article>, t: Throwable) {
                 Toast.makeText(
-                    this@ActivityArticle,
+                    this@ArticleActivity,
                     t.toString(),
                     Toast.LENGTH_SHORT
                 ).show()
@@ -67,7 +68,7 @@ class ActivityArticle : AppCompatActivity() {
                 ): Boolean {
                     imageView.setImageDrawable(
                         AppCompatResources.getDrawable(
-                            this@ActivityArticle,
+                            this@ArticleActivity,
                             R.drawable.rocket
                         )
                     )
@@ -102,7 +103,10 @@ class ActivityArticle : AppCompatActivity() {
         )
         findViewById<TextView>(R.id.text_article_title).text = article.title
         findViewById<TextView>(R.id.text_article_summary).text = article.summary
-        findViewById<TextView>(R.id.text_article_news_site).text = article.newsSite
+
+        val textSource = findViewById<TextView>(R.id.text_article_news_site)
+        textSource.text = getString(R.string.source, article.url, article.newsSite)
+        textSource.movementMethod = LinkMovementMethod.getInstance()
 
         findViewById<ScrollView>(R.id.scroll_view).visibility = View.VISIBLE
     }

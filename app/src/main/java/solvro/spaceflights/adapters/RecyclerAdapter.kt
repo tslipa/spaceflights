@@ -1,7 +1,6 @@
 package solvro.spaceflights.adapters
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
-import solvro.spaceflights.FragmentAll
+import solvro.spaceflights.fragments.AbstractArticlesFragment
 import solvro.spaceflights.R
 import solvro.spaceflights.api.Article
 
@@ -17,13 +16,13 @@ import solvro.spaceflights.api.Article
 class RecyclerAdapter(
     private val dataSet: List<Article>?,
     private val mContext: Context,
-    private val fragment: FragmentAll
+    private val fragment: AbstractArticlesFragment
 ) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     class ViewHolder(
         private val view: View,
-        private val fragment: FragmentAll,
+        private val fragment: AbstractArticlesFragment,
         private val context: Context
     ) :
         RecyclerView.ViewHolder(view) {

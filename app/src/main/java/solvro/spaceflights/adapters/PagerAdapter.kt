@@ -4,8 +4,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import solvro.spaceflights.FragmentAll
-import solvro.spaceflights.FragmentFavourite
+import solvro.spaceflights.fragments.AllArticlesFragment
+import solvro.spaceflights.fragments.FavouriteArticlesFragment
 
 class PagerAdapter(
     fragmentManager: FragmentManager,
@@ -19,9 +19,9 @@ class PagerAdapter(
 
     override fun createFragment(position: Int): Fragment {
         return if (data[position] == "all") {
-            FragmentAll()
+            AllArticlesFragment()
         } else {
-            FragmentFavourite()
+            FavouriteArticlesFragment()
         }
     }
 }

@@ -15,4 +15,13 @@
     <string name="published">Published: %1$s, %2$s</string>
     <string name="updated">Updated: %1$s, %2$s</string>
     <string name="illustration_image">Illustration image</string>
+    <string name="source">Source: %2$s\n%1$s</string>
+    <string name="choose_sort">Sort articles</string>
+    <string name="cancel">Cancel</string>
+
+    <string-array name="sort_possibilities">
+        <item>Title</item>
+        <item>Published</item>
+        <item>Updated</item>
+    </string-array>
 </resources>

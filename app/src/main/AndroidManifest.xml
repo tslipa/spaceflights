@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SpaceFlights">
         <activity
-            android:name=".ActivitySplashScreen"
+            android:name=".SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +22,7 @@
 
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ActivityArticle"
+        <activity android:name=".ArticleActivity"
             android:screenOrientation="portrait" />
     </application>
 
