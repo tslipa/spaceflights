@@ -1,12 +1,14 @@
 <resources>
     <string name="app_name">Space Flights</string>
     <string name="logo_description">Logo of the app</string>
-    <string name="app_info">Info about app</string>
+    <string name="app_info">Info and credits</string>
     <string name="app_info_message">© 2021 Paweł Cegieła\n\n
         * Faculty of Information and Communication Technology\n
         * Wrocław University of Science and Technology\n\n
         * Icon of the app (the rocket) made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>\n\n
-        * Font in logo is AstroSpace from FontSpace</string>
+        * Main font used in the app is Rubik\n\n
+        * Font in logo is AstroSpace from FontSpace\n\n
+        * Background was made by Raphael Nogueira from Unsplash.com</string>
     <string name="ok">OK</string>
     <string name="all">all</string>
     <string name="favourite">favourite</string>
@@ -18,10 +20,13 @@
     <string name="source">Source: %2$s\n%1$s</string>
     <string name="choose_sort">Sort articles</string>
     <string name="cancel">Cancel</string>
+    <string name="fab_sort_description">Dialog showing sort possibilities</string>
+    <string name="fab_search_description">Search bar to filter data</string>
+    <string name="star_description">Star which shows whether the item is marked as favourite</string>
 
     <string-array name="sort_possibilities">
-        <item>Title</item>
-        <item>Published</item>
         <item>Updated</item>
+        <item>Published</item>
+        <item>Title</item>
     </string-array>
 </resources>

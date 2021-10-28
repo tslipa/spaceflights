@@ -2,14 +2,8 @@ package solvro.spaceflights
 
 import android.os.Bundle
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import solvro.spaceflights.api.Article
-import solvro.spaceflights.api.RetrofitClientInstance
-import solvro.spaceflights.api.RetrofitDataGetter
 
 import android.graphics.drawable.Drawable
 import android.text.method.LinkMovementMethod
@@ -18,40 +12,39 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 
 import android.view.View
-import android.widget.ScrollView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.cardview.widget.CardView
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.facebook.shimmer.ShimmerFrameLayout
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import solvro.spaceflights.database.AppDatabase
+import solvro.spaceflights.database.DatabaseUtils
 
 
 class ArticleActivity : AppCompatActivity() {
+    private lateinit var shimmer: ShimmerFrameLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_article)
 
-        val service = RetrofitClientInstance.retrofitInstance!!.create(
-            RetrofitDataGetter::class.java
-        )
+        shimmer = findViewById(R.id.shimmer)!!
+        shimmer.startShimmerAnimation()
 
-        val call: Call<Article> = service.getArticle(intent.getIntExtra("id", 0).toString())
-        call.enqueue(object : Callback<Article> {
-            override fun onResponse(
-                call: Call<Article>,
-                response: Response<Article>
-            ) {
-                response.body()?.let { displayArticle(it) }
-            }
+        val db = AppDatabase.invoke(this)
 
-            override fun onFailure(call: Call<Article>, t: Throwable) {
-                Toast.makeText(
-                    this@ArticleActivity,
-                    t.toString(),
-                    Toast.LENGTH_SHORT
-                ).show()
+        GlobalScope.launch {
+            val entity = db.dao().getEntity(intent.getIntExtra("id", 0))
+            val article = DatabaseUtils.convertEntity(entity[0])
+
+            runOnUiThread {
+                displayArticle(article)
             }
-        })
+        }
     }
 
     private fun displayArticle(article: Article) {
@@ -91,6 +84,9 @@ class ArticleActivity : AppCompatActivity() {
     }
 
     private fun displayTexts(article: Article) {
+        shimmer.stopShimmerAnimation()
+        shimmer.visibility = View.GONE
+
         findViewById<TextView>(R.id.text_article_published).text = getString(
             R.string.published,
             article.publishedAt?.subSequence(0, 10),
@@ -108,6 +104,6 @@ class ArticleActivity : AppCompatActivity() {
         textSource.text = getString(R.string.source, article.url, article.newsSite)
         textSource.movementMethod = LinkMovementMethod.getInstance()
 
-        findViewById<ScrollView>(R.id.scroll_view).visibility = View.VISIBLE
+        findViewById<CardView>(R.id.card_article).visibility = View.VISIBLE
     }
 }

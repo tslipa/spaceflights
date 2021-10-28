@@ -7,6 +7,8 @@
         <entry key="..\:/spaceflights/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.22135416666666666" />
         <entry key="..\:/spaceflights/app/src/main/res/drawable/info_foreground.xml" value="0.22135416666666666" />
         <entry key="..\:/spaceflights/app/src/main/res/drawable/info_icon.xml" value="0.221875" />
+        <entry key="..\:/spaceflights/app/src/main/res/font/montserratsb.xml" value="0.20520833333333333" />
+        <entry key="..\:/spaceflights/app/src/main/res/font/rubik.xml" value="0.20520833333333333" />
         <entry key="..\:/spaceflights/app/src/main/res/layout/activity_article.xml" value="0.20572916666666666" />
         <entry key="..\:/spaceflights/app/src/main/res/layout/activity_loading.xml" value="0.36666666666666664" />
         <entry key="..\:/spaceflights/app/src/main/res/layout/activity_main.xml" value="0.20520833333333333" />
@@ -15,6 +17,7 @@
         <entry key="..\:/spaceflights/app/src/main/res/layout/fragment_favourite.xml" value="0.2630208333333333" />
         <entry key="..\:/spaceflights/app/src/main/res/layout/fragment_favouritel.xml" value="0.275" />
         <entry key="..\:/spaceflights/app/src/main/res/layout/fragment_toolbar.xml" value="0.20572916666666666" />
+        <entry key="..\:/spaceflights/app/src/main/res/layout/placeholder_article.xml" value="0.203125" />
         <entry key="..\:/spaceflights/app/src/main/res/layout/recycler_item.xml" value="0.2015625" />
         <entry key="..\:/spaceflights/app/src/main/res/layout/recycler_item_placeholder.xml" value="0.2630208333333333" />
         <entry key="..\:/spaceflights/app/src/main/res/menu/menu.xml" value="0.20520833333333333" />

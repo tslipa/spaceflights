@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/blue_dark_1"
+        android:background="@color/blue_dark_5"
         app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/toolbar"
+            android:id="@+id/text_toolbar"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="30dp"
             android:layout_weight="4"
-            android:fontFamily="@font/astrospace"
             android:gravity="center_vertical|start"
             android:text="@string/app_name"
-            android:textSize="23sp" />
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="23sp"
+            app:fontFamily="@font/astrospace" />
 
         <ImageButton
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/blue_dark_1"
+            android:background="@color/blue_dark_5"
+            android:contentDescription="@string/app_info"
             android:outlineSpotShadowColor="@color/white"
             android:src="@drawable/info_icon"
             tools:layout_editor_absoluteX="326dp"
-            tools:layout_editor_absoluteY="8dp"
-            android:contentDescription="@string/app_info" />
+            tools:layout_editor_absoluteY="8dp" />
 
     </LinearLayout>
 

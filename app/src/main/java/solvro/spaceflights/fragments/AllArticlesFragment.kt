@@ -1,21 +1,40 @@
 package solvro.spaceflights.fragments
 
 import android.app.AlertDialog
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
+import android.view.inputmethod.InputMethodManager
+import android.widget.SearchView
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import solvro.spaceflights.R
 import solvro.spaceflights.api.Article
 
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import solvro.spaceflights.adapters.RecyclerAdapter
+import solvro.spaceflights.api.RetrofitClientInstance
+import solvro.spaceflights.api.RetrofitDataGetter
+import solvro.spaceflights.database.AppDatabase
+import solvro.spaceflights.database.DatabaseUtils
 
-class AllArticlesFragment : AbstractArticlesFragment() {
-    private val sortType = 0
+
+class AllArticlesFragment : ArticlesFragment() {
+    private var sortType = 0
+    private var adapter: RecyclerAdapter? = null
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var db: AppDatabase
+    private lateinit var searchView: SearchView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,22 +47,83 @@ class AllArticlesFragment : AbstractArticlesFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        getArticles()
+        sharedPreferences = activity?.getPreferences(Context.MODE_PRIVATE)!!
+        sortType = sharedPreferences.getInt("sort", 0)
+
+        searchView = requireActivity().findViewById<SearchView>(R.id.search_view)
+        db = AppDatabase.invoke(requireActivity())
+
+        val recyclerView = requireView().findViewById<RecyclerView>(R.id.recycler_view)
+        adapter = RecyclerAdapter(
+            ArrayList(),
+            requireActivity(),
+            this@AllArticlesFragment,
+        )
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.adapter = adapter
+
+        loadAllArticles()
 
         val swipeRefresh =
             requireActivity().findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_all)
         swipeRefresh.setOnRefreshListener {
-            getArticles()
+            reloadArticlesFromAPI()
             swipeRefresh.isRefreshing = false
         }
 
         setFABListeners()
     }
 
+    fun loadAllArticles() {
+        GlobalScope.launch {
+            list = db.dao().getAll().toMutableList()
+
+            requireActivity().runOnUiThread {
+                adapter?.dataSet = list
+                adapter?.notifyDataSetChanged()
+
+                sort()
+            }
+        }
+    }
+
+    private fun reloadArticlesFromAPI() {
+        val service = RetrofitClientInstance.retrofitInstance!!.create(
+            RetrofitDataGetter::class.java
+        )
+
+        val call: Call<List<Article>?>? = service.articles
+        call!!.enqueue(object : Callback<List<Article>?> {
+            override fun onResponse(
+                call: Call<List<Article>?>,
+                response: Response<List<Article>?>
+            ) {
+                val articles = (response.body())!!
+
+                GlobalScope.launch {
+                    for (element in articles) {
+                        val entity = DatabaseUtils.toEntity(element, false)
+                        db.dao().addEntity(entity)
+                    }
+                    requireActivity().runOnUiThread {
+                        loadAllArticles()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<List<Article>?>, t: Throwable) {
+                Toast.makeText(
+                    activity,
+                    "Unable to download articles. Make sure that you have internet connection.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
+    }
+
     override fun onResume() {
         super.onResume()
-        requireActivity().findViewById<ShimmerFrameLayout>(R.id.shimmer_all)!!
-            .startShimmerAnimation()
+        loadAllArticles()
     }
 
     private fun setFABListeners() {
@@ -72,32 +152,79 @@ class AllArticlesFragment : AbstractArticlesFragment() {
         fabSort.setOnClickListener {
             val choices = resources.getStringArray(R.array.sort_possibilities)
 
-            var newSortType: Int = sortType
-
             val dialog = AlertDialog.Builder(context)
                 .setTitle(getString(R.string.choose_sort))
-                .setSingleChoiceItems(choices, sortType) { _, which -> newSortType = which }
-                .setPositiveButton(getString(R.string.ok)) { _, _ -> doSort(newSortType) }
+                .setSingleChoiceItems(choices, sortType) { _, which -> sortType = which }
+                .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                    sharedPreferences.edit().putInt("sort", sortType).apply()
+                    sort()
+                }
                 .setNegativeButton(getString(R.string.cancel), null)
                 .create()
             dialog.show()
         }
+
+        fabSearch.setOnClickListener {
+            if (searchView.visibility == View.GONE) {
+                doSearch()
+            } else {
+                submitQuery(searchView.query.toString())
+            }
+        }
     }
 
-    override fun formatList(list: List<Article>?): List<Article> {
-        return list!!
+    private fun sort() {
+        list!!.sortWith { lhs, rhs ->
+            when (sortType) {
+                0 -> if (lhs.updatedAt!! > rhs.updatedAt!!) -1 else if (lhs.updatedAt < rhs.updatedAt) 1 else 0
+                1 -> if (lhs.publishedAt!! > rhs.publishedAt!!) -1 else if (lhs.publishedAt < rhs.publishedAt) 1 else 0
+                else -> if (lhs.title!! > rhs.title!!) 1 else if (lhs.title < rhs.title) -1 else 0
+            }
+        }
+
+        adapter?.notifyDataSetChanged()
     }
 
-    override fun stopShimmer() {
-        requireActivity().findViewById<ShimmerFrameLayout>(R.id.shimmer_all)!!
-            .stopShimmerAnimation()
-        requireActivity().findViewById<ShimmerFrameLayout>(R.id.shimmer_all)!!.visibility =
-            View.GONE
+    private fun doSearch() {
+        searchView.visibility = View.VISIBLE
 
-        //TODO żeby nie powtarzać
+        searchView.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    submitQuery(query!!)
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean = true
+            })
+
+        searchView.setOnCloseListener {
+            searchView.visibility = View.GONE
+            loadAllArticles()
+            true
+        }
+
+        searchView.setOnClickListener { searchView.isIconified = false }
     }
 
-    private fun doSort(type: Int) {
+    override fun dataSetChanged(isFavourite: Boolean, position: Int) {
 
+    }
+
+    fun submitQuery(query: String) {
+        if (requireActivity().currentFocus != null) {
+            val imm: InputMethodManager? =
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+            imm?.hideSoftInputFromWindow(view?.windowToken, 0)
+        }
+
+        GlobalScope.launch {
+            list = db.dao().getFromQuery("%$query%").toMutableList()
+            requireActivity().runOnUiThread {
+                adapter?.dataSet = list
+                adapter?.notifyDataSetChanged()
+                sort()
+            }
+        }
     }
 }

@@ -8,22 +8,26 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
-import solvro.spaceflights.fragments.AbstractArticlesFragment
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import solvro.spaceflights.fragments.ArticlesFragment
 import solvro.spaceflights.R
-import solvro.spaceflights.api.Article
+import solvro.spaceflights.database.AppDatabase
+import solvro.spaceflights.database.Entity
 
 
 class RecyclerAdapter(
-    private val dataSet: List<Article>?,
+    var dataSet: List<Entity>?,
     private val mContext: Context,
-    private val fragment: AbstractArticlesFragment
+    private val fragment: ArticlesFragment,
 ) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     class ViewHolder(
         private val view: View,
-        private val fragment: AbstractArticlesFragment,
-        private val context: Context
+        private val fragment: ArticlesFragment,
+        private val context: Context,
+        private val adapter: RecyclerAdapter
     ) :
         RecyclerView.ViewHolder(view) {
         val textDate: TextView = view.findViewById(R.id.text_date)
@@ -37,28 +41,23 @@ class RecyclerAdapter(
             }
 
             imageIsFavourite.setOnClickListener {
-                val value = if (context.getSharedPreferences("favourites", Context.MODE_PRIVATE)
-                        .getString(view.tag.toString(), "N") == "N") {
-                    "Y"
-                } else {
-                    "N"
-                }
-                val editor =
-                    context.getSharedPreferences("favourites", Context.MODE_PRIVATE).edit()
-                editor.putString(view.tag.toString(), value)
-                editor.apply()
+                val db = AppDatabase.invoke(context)
 
+                val favourite = adapter.dataSet?.get(adapterPosition)!!.favourite
+                adapter.dataSet?.get(adapterPosition)!!.favourite = !favourite
                 setImageIsFavourite()
+                fragment.dataSetChanged(!favourite, adapterPosition)
+                GlobalScope.launch {
+                    db.dao().setIfFavourite(view.tag as Int, !favourite)
+                }
             }
         }
 
         fun setImageIsFavourite() {
-            val resource = if (context.getSharedPreferences("favourites", Context.MODE_PRIVATE)
-                    .getString(view.tag.toString(), "N") == "N"
-            ) {
-                R.drawable.star1
-            } else {
+            val resource = if (adapter.dataSet?.get(adapterPosition)!!.favourite) {
                 R.drawable.star2
+            } else {
+                R.drawable.star1
             }
 
             imageIsFavourite.setImageDrawable(
@@ -74,7 +73,7 @@ class RecyclerAdapter(
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.recycler_item, viewGroup, false)
-        return ViewHolder(view, fragment, mContext)
+        return ViewHolder(view, fragment, mContext, this)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -87,10 +86,11 @@ class RecyclerAdapter(
             article.updatedAt?.subSequence(11, 19)
         )
         holder.textTitle.text = article.title
-        holder.textSummary.text = if (article.summary!!.length <= 75) {
-            article.summary
+        val summary = article.summary!!
+        holder.textSummary.text = if (summary.length <= 75) {
+            summary
         } else {
-            StringBuilder().append(article.summary.substring(0, 75)).append("...").toString()
+            StringBuilder().append(summary.substring(0, 75)).append("...").toString()
         }
     }
 
