@@ -1,19 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Theme.SpaceFlights" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/blue_dark_4</item>
-        <item name="colorPrimaryVariant">@color/blue_dark_3</item>
+        <item name="colorPrimary">@color/blue_2</item>
+        <item name="colorPrimaryVariant">@color/blue_1</item>
         <item name="colorOnPrimary">@color/white</item>
 
-        <item name="colorSecondary">@color/blue_dark_3</item>
+        <item name="colorSecondary">@color/blue_1</item>
         <item name="colorSecondaryVariant">@color/gray_light</item>
         <item name="colorOnSecondary">@color/gray_light</item>
 
-        <item name="android:statusBarColor" tools:targetApi="l">@color/blue_dark_5</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/blue_3</item>
         <item name="android:colorBackground">@color/gray_light</item>
 
         <item name="android:textColorPrimary">@color/gray_light</item>
         <item name="android:textColorSecondary">@color/gray_light</item>
-        <item name="android:textColorTertiary">@color/blue_dark_4</item>
+        <item name="android:textColorTertiary">@color/blue_2</item>
 
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowContentTransitions">true</item>
@@ -25,7 +25,17 @@
         <item name="tabIndicatorHeight">4dp</item>
         <item name="tabPaddingStart">6dp</item>
         <item name="tabPaddingEnd">6dp</item>
-        <item name="tabBackground">@color/blue_dark_5</item>
+        <item name="tabBackground">@color/blue_3</item>
         <item name="android:forceDarkAllowed">false</item>
+    </style>
+
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColorPrimary">@color/blue_2</item>
+        <item name="android:background">@color/gray_light</item>
+        <item name="buttonBarPositiveButtonStyle">@style/ButtonStyleCustom</item>
+    </style>
+
+    <style name="ButtonStyleCustom" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/blue_3</item>
     </style>
 </resources>

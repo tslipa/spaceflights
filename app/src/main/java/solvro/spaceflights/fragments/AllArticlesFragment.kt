@@ -1,5 +1,6 @@
 package solvro.spaceflights.fragments
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
@@ -27,8 +28,13 @@ import solvro.spaceflights.api.RetrofitClientInstance
 import solvro.spaceflights.api.RetrofitDataGetter
 import solvro.spaceflights.database.AppDatabase
 import solvro.spaceflights.database.DatabaseUtils
+import org.greenrobot.eventbus.ThreadMode
 
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.EventBus
+import solvro.spaceflights.MessageEvent
 
+@SuppressLint("NotifyDataSetChanged")
 class AllArticlesFragment : ArticlesFragment() {
     private var sortType = 0
     private var adapter: RecyclerAdapter? = null
@@ -41,6 +47,7 @@ class AllArticlesFragment : ArticlesFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        EventBus.getDefault().register(this)
         return inflater.inflate(R.layout.fragment_all, container, false)
     }
 
@@ -50,7 +57,7 @@ class AllArticlesFragment : ArticlesFragment() {
         sharedPreferences = activity?.getPreferences(Context.MODE_PRIVATE)!!
         sortType = sharedPreferences.getInt("sort", 0)
 
-        searchView = requireActivity().findViewById<SearchView>(R.id.search_view)
+        searchView = requireActivity().findViewById(R.id.search_view)
         db = AppDatabase.invoke(requireActivity())
 
         val recyclerView = requireView().findViewById<RecyclerView>(R.id.recycler_view)
@@ -63,6 +70,7 @@ class AllArticlesFragment : ArticlesFragment() {
         recyclerView.adapter = adapter
 
         loadAllArticles()
+        reloadArticlesFromAPI()
 
         val swipeRefresh =
             requireActivity().findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_all)
@@ -72,6 +80,31 @@ class AllArticlesFragment : ArticlesFragment() {
         }
 
         setFABListeners()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: MessageEvent) {
+        if (!event.direction) {
+            for (i in 0 until list!!.lastIndex) {
+                if (list!![i].id == event.id) {
+                    list!![i].favourite = false
+                    adapter?.notifyItemChanged(i)
+                }
+            }
+        }
+    }
+
+    override fun onDataSetChanged(isFavourite: Boolean, position: Int) {
+        if (!isFavourite) {
+            EventBus.getDefault().post(MessageEvent(list!![position].id, null, true))
+        } else {
+            EventBus.getDefault().post(MessageEvent(list!![position].id, list!![position], true))
+        }
     }
 
     fun loadAllArticles() {
@@ -121,11 +154,6 @@ class AllArticlesFragment : ArticlesFragment() {
         })
     }
 
-    override fun onResume() {
-        super.onResume()
-        loadAllArticles()
-    }
-
     private fun setFABListeners() {
         val fabSearch = requireActivity().findViewById<FloatingActionButton>(R.id.fab_search)
         val fabSort = requireActivity().findViewById<FloatingActionButton>(R.id.fab_sort)
@@ -166,7 +194,7 @@ class AllArticlesFragment : ArticlesFragment() {
 
         fabSearch.setOnClickListener {
             if (searchView.visibility == View.GONE) {
-                doSearch()
+                search()
             } else {
                 submitQuery(searchView.query.toString())
             }
@@ -185,7 +213,7 @@ class AllArticlesFragment : ArticlesFragment() {
         adapter?.notifyDataSetChanged()
     }
 
-    private fun doSearch() {
+    private fun search() {
         searchView.visibility = View.VISIBLE
 
         searchView.setOnQueryTextListener(
@@ -205,10 +233,6 @@ class AllArticlesFragment : ArticlesFragment() {
         }
 
         searchView.setOnClickListener { searchView.isIconified = false }
-    }
-
-    override fun dataSetChanged(isFavourite: Boolean, position: Int) {
-
     }
 
     fun submitQuery(query: String) {

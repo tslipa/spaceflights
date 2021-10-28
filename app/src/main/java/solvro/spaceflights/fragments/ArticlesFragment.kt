@@ -9,7 +9,7 @@ import solvro.spaceflights.database.Entity
 abstract class ArticlesFragment : Fragment() {
     var list: MutableList<Entity>? = null
 
-    abstract fun dataSetChanged(isFavourite: Boolean, position: Int)
+    abstract fun onDataSetChanged(isFavourite: Boolean, position: Int)
 
     fun startActivityArticle(tag: Int) {
         val intent = Intent(activity, ArticleActivity::class.java)

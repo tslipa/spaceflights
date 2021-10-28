@@ -1,9 +1,11 @@
 package solvro.spaceflights.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -12,6 +14,12 @@ import kotlinx.coroutines.launch
 import solvro.spaceflights.R
 import solvro.spaceflights.adapters.RecyclerAdapter
 import solvro.spaceflights.database.AppDatabase
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.ThreadMode
+
+import org.greenrobot.eventbus.Subscribe
+import solvro.spaceflights.MessageEvent
+
 
 class FavArticlesFragment : ArticlesFragment() {
     private lateinit var adapter: RecyclerAdapter
@@ -21,6 +29,7 @@ class FavArticlesFragment : ArticlesFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        EventBus.getDefault().register(this)
         return inflater.inflate(R.layout.fragment_favourite, container, false)
     }
 
@@ -35,6 +44,42 @@ class FavArticlesFragment : ArticlesFragment() {
             getArticlesFromDatabase()
             swipeRefresh.isRefreshing = false
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: MessageEvent) {
+        if (event.direction) {
+            if (event.entity == null) {
+                for (i in 0..list!!.lastIndex) {
+                    if (list!![i].id == event.id) {
+                        list!!.removeAt(i)
+                        adapter.notifyItemRemoved(i)
+                        return
+                    }
+                }
+            } else {
+                for (i in 0..list!!.lastIndex) {
+                    if (list!![i].updatedAt!! < event.entity.updatedAt!!) {
+                        list!!.add(i, event.entity)
+                        adapter.notifyItemInserted(i)
+                        return
+                    }
+                }
+                list!!.add(event.entity)
+                adapter.notifyItemInserted(list!!.lastIndex)
+            }
+        }
+    }
+
+    override fun onDataSetChanged(isFavourite: Boolean, position: Int) {
+        EventBus.getDefault().post(MessageEvent(list!![position].id, null, false))
+        list!!.removeAt(position)
+        adapter.notifyItemRemoved(position)
     }
 
     private fun getArticlesFromDatabase() {
@@ -53,18 +98,6 @@ class FavArticlesFragment : ArticlesFragment() {
                 recyclerView.layoutManager = LinearLayoutManager(activity)
                 recyclerView.adapter = adapter
             }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        getArticlesFromDatabase()
-    }
-
-    override fun dataSetChanged(isFavourite: Boolean, position: Int) {
-        if (!isFavourite) {
-            list!!.removeAt(position)
-            adapter.notifyItemRemoved(position)
         }
     }
 }

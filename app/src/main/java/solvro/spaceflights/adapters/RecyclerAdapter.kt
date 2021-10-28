@@ -46,7 +46,7 @@ class RecyclerAdapter(
                 val favourite = adapter.dataSet?.get(adapterPosition)!!.favourite
                 adapter.dataSet?.get(adapterPosition)!!.favourite = !favourite
                 setImageIsFavourite()
-                fragment.dataSetChanged(!favourite, adapterPosition)
+                fragment.onDataSetChanged(!favourite, adapterPosition)
                 GlobalScope.launch {
                     db.dao().setIfFavourite(view.tag as Int, !favourite)
                 }
@@ -55,9 +55,9 @@ class RecyclerAdapter(
 
         fun setImageIsFavourite() {
             val resource = if (adapter.dataSet?.get(adapterPosition)!!.favourite) {
-                R.drawable.star2
+                R.drawable.star_filled
             } else {
-                R.drawable.star1
+                R.drawable.star_empty
             }
 
             imageIsFavourite.setImageDrawable(

@@ -19,7 +19,7 @@ class ToolbarFragment : Fragment() {
 
         view.findViewById<ImageButton>(R.id.button).setOnClickListener {
                 val builder: AlertDialog.Builder = this.let {
-                    AlertDialog.Builder(requireActivity())
+                    AlertDialog.Builder(requireActivity(), R.style.AlertDialogCustom)
                 }
 
                 builder.setMessage(R.string.app_info_message)

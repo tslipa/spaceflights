@@ -24,7 +24,7 @@
         android:id="@+id/search_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/blue_dark_3"
+        android:background="@color/blue_1"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/guideline_top"
         app:layout_constraintEnd_toEndOf="parent"
