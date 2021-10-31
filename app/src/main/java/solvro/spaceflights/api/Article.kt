@@ -1,6 +1,6 @@
 package solvro.spaceflights.api
 
-class Article() {
+class Article {
     var id = 0
     var title: String? = null
     var url: String? = null
@@ -9,7 +9,4 @@ class Article() {
     var summary: String? = null
     var publishedAt: String? = null
     var updatedAt: String? = null
-    val featured: String? = null
-    val launches: List<Launch>? = null
-    val events: List<Event>? = null
 }

@@ -1,4 +1,4 @@
-package solvro.spaceflights
+package solvro.spaceflights.activities
 
 import android.os.Bundle
 import android.widget.TextView
@@ -21,6 +21,7 @@ import com.bumptech.glide.request.target.Target
 import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import solvro.spaceflights.R
 import solvro.spaceflights.database.AppDatabase
 import solvro.spaceflights.database.DatabaseUtils
 
@@ -35,11 +36,14 @@ class ArticleActivity : AppCompatActivity() {
         shimmer = findViewById(R.id.shimmer)!!
         shimmer.startShimmerAnimation()
 
+        window.exitTransition = null
+        window.enterTransition = null
+
         val db = AppDatabase.invoke(this)
 
         GlobalScope.launch {
             val entity = db.dao().getEntity(intent.getIntExtra("id", 0))
-            val article = DatabaseUtils.convertEntity(entity[0])
+            val article = DatabaseUtils.toArticle(entity[0])
 
             runOnUiThread {
                 displayArticle(article)

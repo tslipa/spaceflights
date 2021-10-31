@@ -1,17 +1,15 @@
-package solvro.spaceflights
+package solvro.spaceflights.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.transition.Fade
-import android.transition.Transition
 import android.view.View
 import android.widget.SearchView
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.FragmentContainerView
 
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import solvro.spaceflights.R
 import solvro.spaceflights.adapters.PagerAdapter
 import solvro.spaceflights.fragments.AllArticlesFragment
 
@@ -31,13 +29,14 @@ class MainActivity : AppCompatActivity() {
             tab.text = list[position]
         }.attach()
 
-
-        val fade: Transition = Fade()
-        fade.excludeTarget(FragmentContainerView::class.java, true)
         window.exitTransition = null
         window.enterTransition = null
-
-        window.setBackgroundDrawable(ResourcesCompat.getDrawable(resources, R.drawable.background, null))
+        window.setBackgroundDrawable(
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.background, null
+            )
+        )
     }
 
     override fun onBackPressed() {

@@ -4,17 +4,7 @@ import solvro.spaceflights.api.Article
 
 class DatabaseUtils {
     companion object {
-        fun toArticles(entities: List<Entity>): ArrayList<Article> {
-            val articles = ArrayList<Article>()
-
-            for (entity in entities) {
-                articles.add(convertEntity(entity))
-            }
-
-            return articles
-        }
-
-        fun convertEntity(entity: Entity): Article {
+        fun toArticle(entity: Entity): Article {
             val article = Article()
 
             article.id = entity.id

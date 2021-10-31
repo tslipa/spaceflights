@@ -18,14 +18,14 @@ class ToolbarFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_toolbar, container, false)
 
         view.findViewById<ImageButton>(R.id.button).setOnClickListener {
-                val builder: AlertDialog.Builder = this.let {
-                    AlertDialog.Builder(requireActivity(), R.style.AlertDialogCustom)
-                }
+            val builder: AlertDialog.Builder = this.let {
+                AlertDialog.Builder(requireActivity(), R.style.AlertDialogCustom)
+            }
 
-                builder.setMessage(R.string.app_info_message)
-                    .setTitle(R.string.app_info)
-                    .setPositiveButton(R.string.ok, null)
-                builder.create().show()
+            builder.setMessage(R.string.app_info_message)
+                .setTitle(R.string.app_info)
+                .setPositiveButton(R.string.ok, null)
+            builder.create().show()
         }
 
         return view

@@ -37,7 +37,6 @@ import solvro.spaceflights.MessageEvent
 @SuppressLint("NotifyDataSetChanged")
 class AllArticlesFragment : ArticlesFragment() {
     private var sortType = 0
-    private var adapter: RecyclerAdapter? = null
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var db: AppDatabase
     private lateinit var searchView: SearchView
@@ -80,11 +79,6 @@ class AllArticlesFragment : ArticlesFragment() {
         }
 
         setFABListeners()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        EventBus.getDefault().unregister(this)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

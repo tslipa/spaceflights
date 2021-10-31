@@ -1,11 +1,9 @@
 package solvro.spaceflights.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -22,8 +20,6 @@ import solvro.spaceflights.MessageEvent
 
 
 class FavArticlesFragment : ArticlesFragment() {
-    private lateinit var adapter: RecyclerAdapter
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,11 +42,6 @@ class FavArticlesFragment : ArticlesFragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        EventBus.getDefault().unregister(this)
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: MessageEvent) {
         if (event.direction) {
@@ -58,7 +49,7 @@ class FavArticlesFragment : ArticlesFragment() {
                 for (i in 0..list!!.lastIndex) {
                     if (list!![i].id == event.id) {
                         list!!.removeAt(i)
-                        adapter.notifyItemRemoved(i)
+                        adapter?.notifyItemRemoved(i)
                         return
                     }
                 }
@@ -66,12 +57,12 @@ class FavArticlesFragment : ArticlesFragment() {
                 for (i in 0..list!!.lastIndex) {
                     if (list!![i].updatedAt!! < event.entity.updatedAt!!) {
                         list!!.add(i, event.entity)
-                        adapter.notifyItemInserted(i)
+                        adapter?.notifyItemInserted(i)
                         return
                     }
                 }
                 list!!.add(event.entity)
-                adapter.notifyItemInserted(list!!.lastIndex)
+                adapter?.notifyItemInserted(list!!.lastIndex)
             }
         }
     }
@@ -79,7 +70,7 @@ class FavArticlesFragment : ArticlesFragment() {
     override fun onDataSetChanged(isFavourite: Boolean, position: Int) {
         EventBus.getDefault().post(MessageEvent(list!![position].id, null, false))
         list!!.removeAt(position)
-        adapter.notifyItemRemoved(position)
+        adapter?.notifyItemRemoved(position)
     }
 
     private fun getArticlesFromDatabase() {
